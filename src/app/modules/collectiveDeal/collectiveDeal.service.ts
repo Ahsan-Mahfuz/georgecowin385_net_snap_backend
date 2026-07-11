@@ -2,6 +2,7 @@ import { CollectiveDeal } from "./collectiveDeal.model";
 import { ICollectiveDeal } from "./collectiveDeal.interface";
 import QueryBuilder from "../../builder/QueryBuilder";
 import AppError from "../../error/appError";
+import { createXeroInvoice } from "../../helper/xero";
 
 const POPULATE = { path: "owner", select: "name email role" };
 
@@ -47,10 +48,47 @@ const deleteDeal = async (id: string) => {
   return { message: "Collective deal deleted successfully" };
 };
 
+const createInvoice = async (id: string) => {
+  const deal = await CollectiveDeal.findOne({ _id: id, isDeleted: false });
+  if (!deal) throw new AppError(404, "Collective deal not found");
+  const result = await createXeroInvoice({
+    contactName: deal.company,
+    description: deal.dealName || "Collective sales deal",
+    amount: Number(deal.amount || 0),
+    reference: deal.contactName,
+  });
+  deal.xeroInvoiceId = result.invoiceId;
+  deal.xeroStatus = result.status;
+  deal.xeroOrg = "Cowshed Collective Sales";
+  await deal.save();
+  return deal.populate(POPULATE);
+};
+
+const markInvoiced = async (id: string) => {
+  const deal = await CollectiveDeal.findOne({ _id: id, isDeleted: false });
+  if (!deal) throw new AppError(404, "Collective deal not found");
+  deal.stage = "Invoiced";
+  deal.xeroStatus = "Invoiced in Collective Xero";
+  await deal.save();
+  return deal.populate(POPULATE);
+};
+
+const markPaid = async (id: string) => {
+  const deal = await CollectiveDeal.findOne({ _id: id, isDeleted: false });
+  if (!deal) throw new AppError(404, "Collective deal not found");
+  deal.stage = "Paid";
+  deal.xeroStatus = "Paid / reconciled in Collective Xero";
+  await deal.save();
+  return deal.populate(POPULATE);
+};
+
 export const CollectiveDealService = {
   createDeal,
   getDeals,
   getDealById,
   updateDeal,
   deleteDeal,
+  createInvoice,
+  markInvoiced,
+  markPaid,
 };

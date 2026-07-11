@@ -13,5 +13,14 @@ export type TAccountStatus = (typeof ACCOUNT_STATUSES)[number];
 export const DEAL_STATUSES = ["Confirmed", "Pipeline"] as const;
 export type TDealStatus = (typeof DEAL_STATUSES)[number];
 
+// Production request lifecycle: manager submits → production team schedules/completes.
+export const PRODUCTION_REQUEST_STATUSES = [
+  "pending",
+  "scheduled",
+  "completed",
+  "rejected",
+] as const;
+export type TProductionRequestStatus = (typeof PRODUCTION_REQUEST_STATUSES)[number];
+
 // Roles allowed to administer users (approve / block / change roles).
 export const ADMIN_ROLES: TRole[] = ["admin", "operations"];

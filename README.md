@@ -38,8 +38,35 @@ admin (or operations) approves them via `PATCH /user/:id/approve`. Statuses:
 | GET/PATCH/DELETE | `/deal/:id` | any logged-in | one deal |
 | GET/POST | `/collective-deal` | any logged-in | Collective deals |
 | GET/PATCH/DELETE | `/collective-deal/:id` | any logged-in | one collective deal |
+| GET/POST/PATCH/DELETE | `/overhead` `/talent` `/email-lead` `/expense` | logged-in (writes vary) | domain data |
+| GET/PATCH | `/settings` | get: any / patch: admin | targets, salaries, commission %, production rates |
+| GET/POST | `/approval` | any logged-in | submit-for-approval + list |
+| PATCH | `/approval/:id/approve` · `/reject` | admin/operations | resolve approvals |
+| POST | `/deal/:id/xero-invoice` · `/mark-invoiced` · `/mark-paid` | admin/finance/ops | Xero invoicing on a deal |
+| POST | `/deal/:id/send-remittance` · `/mark-talent-paid` | admin/finance/ops | talent remittance on a paid deal |
+| POST | `/collective-deal/:id/xero-invoice` · `/mark-invoiced` · `/mark-paid` | any logged-in | Xero invoicing on a collective deal |
+| GET/POST | `/production-request` | any logged-in | submit + list production requests |
+| PATCH/DELETE | `/production-request/:id` | admin/ops/production | schedule/complete/reject a request |
+| GET | `/xero/status` | any logged-in | `{ connected }` — is real Xero configured |
 
 Response envelope: `{ success, statusCode, message, token?, meta?, data }`.
+
+## Xero integration
+
+Uses a **Custom Connection** (OAuth2 client-credentials — backend-only, no browser
+redirect). Without credentials it returns a deterministic **simulated draft** so the
+invoicing flow works out of the box. To go live, create a Custom Connection app at
+https://developer.xero.com, connect it to your organisation, and set in `.env`:
+
+```
+XERO_CLIENT_ID=...
+XERO_CLIENT_SECRET=...
+XERO_TENANT_ID=...        # the connected organisation's tenant id
+XERO_ACCOUNT_CODE=200     # revenue account code for invoice line items
+```
+
+`GET /xero/status` reports `connected: true` once these are set; invoice calls then
+hit the real Xero Accounting API (`POST /Invoices`, ACCREC draft).
 
 ## Structure
 

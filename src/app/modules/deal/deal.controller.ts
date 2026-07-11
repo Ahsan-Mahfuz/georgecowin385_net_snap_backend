@@ -53,4 +53,40 @@ const deleteDeal = catchAsync(async (req, res) => {
   });
 });
 
-export const DealController = { createDeal, getDeals, getDealById, updateDeal, deleteDeal };
+const createInvoice = catchAsync(async (req, res) => {
+  const result = await DealService.createInvoice(req.params.id);
+  sendResponse(res, { statusCode: 200, success: true, message: "Xero invoice created", data: result });
+});
+
+const markInvoiced = catchAsync(async (req, res) => {
+  const result = await DealService.markInvoiced(req.params.id);
+  sendResponse(res, { statusCode: 200, success: true, message: "Marked invoiced", data: result });
+});
+
+const markPaid = catchAsync(async (req, res) => {
+  const result = await DealService.markPaid(req.params.id);
+  sendResponse(res, { statusCode: 200, success: true, message: "Marked paid", data: result });
+});
+
+const sendRemittance = catchAsync(async (req, res) => {
+  const result = await DealService.sendRemittance(req.params.id);
+  sendResponse(res, { statusCode: 200, success: true, message: "Remittance sent", data: result });
+});
+
+const markTalentPaid = catchAsync(async (req, res) => {
+  const result = await DealService.markTalentPaid(req.params.id);
+  sendResponse(res, { statusCode: 200, success: true, message: "Talent marked paid", data: result });
+});
+
+export const DealController = {
+  createDeal,
+  getDeals,
+  getDealById,
+  updateDeal,
+  deleteDeal,
+  createInvoice,
+  markInvoiced,
+  markPaid,
+  sendRemittance,
+  markTalentPaid,
+};
