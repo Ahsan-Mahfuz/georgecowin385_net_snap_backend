@@ -10,6 +10,12 @@ export const createDealSchema = z.object({
   stage: z.string().optional(),
   monthValues: z.array(z.number()).length(12).optional(),
   costRate: z.number().optional(),
+  contactEmail: z.string().optional(),
+  paymentTerm: z.string().optional(),
+  customPaymentDays: z.number().optional(),
+  signedMonthIndex: z.number().optional(),
+  currency: z.enum(["GBP", "USD"]).optional(),
+  poNumber: z.string().optional(),
 });
 
 export const updateDealSchema = createDealSchema.partial();

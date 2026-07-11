@@ -16,6 +16,9 @@ router.post(
   validateRequest(createCollectiveDealSchema),
   CollectiveDealController.createDeal,
 );
+router.post("/:id/xero-invoice", auth(), CollectiveDealController.createInvoice);
+router.post("/:id/mark-invoiced", auth(), CollectiveDealController.markInvoiced);
+router.post("/:id/mark-paid", auth(), CollectiveDealController.markPaid);
 router.get("/:id", auth(), CollectiveDealController.getDealById);
 router.patch(
   "/:id",

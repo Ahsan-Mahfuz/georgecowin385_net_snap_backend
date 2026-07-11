@@ -53,10 +53,28 @@ const deleteDeal = catchAsync(async (req, res) => {
   });
 });
 
+const createInvoice = catchAsync(async (req, res) => {
+  const result = await CollectiveDealService.createInvoice(req.params.id);
+  sendResponse(res, { statusCode: 200, success: true, message: "Xero invoice created", data: result });
+});
+
+const markInvoiced = catchAsync(async (req, res) => {
+  const result = await CollectiveDealService.markInvoiced(req.params.id);
+  sendResponse(res, { statusCode: 200, success: true, message: "Marked invoiced", data: result });
+});
+
+const markPaid = catchAsync(async (req, res) => {
+  const result = await CollectiveDealService.markPaid(req.params.id);
+  sendResponse(res, { statusCode: 200, success: true, message: "Marked paid", data: result });
+});
+
 export const CollectiveDealController = {
   createDeal,
   getDeals,
   getDealById,
   updateDeal,
   deleteDeal,
+  createInvoice,
+  markInvoiced,
+  markPaid,
 };
