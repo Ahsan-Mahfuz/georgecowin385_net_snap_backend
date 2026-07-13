@@ -17,6 +17,11 @@ const userSchema = new Schema<IUser>(
   { timestamps: true },
 );
 
+// Expose the `id` virtual (hex string of _id) in JSON responses. The frontend
+// reads `user.id` everywhere; without this it only receives `_id` and every
+// per-user action (role change, salary keying, etc.) breaks. `_id` is kept too.
+userSchema.set("toJSON", { virtuals: true });
+
 // Hash password whenever it is set/changed. Runs on .save() only — so any
 // password change must go through user.save(), never findByIdAndUpdate.
 userSchema.pre("save", async function (next) {

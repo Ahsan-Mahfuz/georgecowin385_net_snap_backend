@@ -10,6 +10,7 @@ export const createDealSchema = z.object({
   stage: z.string().optional(),
   monthValues: z.array(z.number()).length(12).optional(),
   costRate: z.number().optional(),
+  year: z.number().int().optional(),
   contactEmail: z.string().optional(),
   paymentTerm: z.string().optional(),
   customPaymentDays: z.number().optional(),

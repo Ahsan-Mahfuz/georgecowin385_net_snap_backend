@@ -10,6 +10,7 @@ export interface IDeal extends Document {
   stage?: string;
   monthValues: number[];
   costRate: number;
+  year: number; // which calendar year this deal's monthValues belong to (e.g. 2026)
 
   // CRM / cashflow / invoicing fields
   contactEmail?: string;

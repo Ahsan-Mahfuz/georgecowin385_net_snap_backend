@@ -13,6 +13,8 @@ const dealSchema = new Schema<IDeal>(
     // 12 monthly values (Jan–Dec) — drives P&L, cashflow, leaderboard.
     monthValues: { type: [Number], default: () => new Array(12).fill(0) },
     costRate: { type: Number, default: 80 },
+    // Calendar year the 12 monthValues belong to. Lets P&L/cashflow filter by year.
+    year: { type: Number, default: 2026, index: true },
 
     // CRM / cashflow / invoicing
     contactEmail: { type: String, default: "" },
